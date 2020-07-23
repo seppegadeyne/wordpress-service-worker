@@ -2,9 +2,9 @@
 ## Optimized for a WordPress stack 
 Install a service worker to make your website work faster and also support offline viewing. You're website will be a qualified Progressive Web App (PWA). 
 
-## Docs not yet completed .... 
+### Manual not yet completed .... 
 
-## Add to functions.php
+### Add to functions.php
 ```php
 function wp_enqueue_scripts() {
   if(get_current_user_id() == 0) {
