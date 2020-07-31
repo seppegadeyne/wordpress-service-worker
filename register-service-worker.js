@@ -3,11 +3,23 @@ const addToCache = async (pages) => {
     await pageCache.addAll(pages);
 }
 
-// Check that service workers are registered
 if ('serviceWorker' in navigator) {
     // Use the window load event to keep the page load performant
     window.addEventListener('load', () => {
-        addToCache([window.location.pathname]);
-        navigator.serviceWorker.register('/service-worker.js');
+        navigator.serviceWorker.register('/service-worker.js?ver=0.0.4');
+    });
+
+    let nodes = document.querySelectorAll('body a');
+    nodes.forEach(node => {
+        node.addEventListener('mouseover', event => {
+            if(event.target.origin === 'https://my-domain.com') {
+                addToCache([event.target.pathname]);
+            }
+        });
+        node.addEventListener('touchstart', event => {
+            if(event.target.origin === 'https://my-domain.com') {
+                addToCache([event.target.pathname]);
+            }
+        });
     });
 }
