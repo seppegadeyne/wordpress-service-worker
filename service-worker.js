@@ -1,67 +1,75 @@
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.5.0/workbox-sw.js")
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
 
 workbox.setConfig({
     debug: false
 })
 
-workbox.routing.registerRoute(
-    new RegExp('.*(?:googleapis|gstatic)\.com.*$'),
-    workbox.strategies.staleWhileRevalidate(),
-)
+workbox.googleAnalytics.initialize();
 
 workbox.routing.registerRoute(
-    new RegExp('.*(?:smushcdn)\.com.*$'),
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'smush-cdn',
-    }),
-)
-
-workbox.routing.registerRoute(
-    new RegExp('.*(?:gravatar)\.com.*$'),
-    workbox.strategies.staleWhileRevalidate(),
-)
-
-workbox.routing.registerRoute(
-    new RegExp('.*(?:my-domain)\.com.*\.js'),
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'js-cache',
+    ({request}) => request.destination === 'font',
+    new workbox.strategies.CacheFirst({
+        cacheName: 'font-cache',
+        plugins: [
+            new workbox.cacheableResponse.CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+            new workbox.expiration.ExpirationPlugin({
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+                maxEntries: 30,
+            }),
+        ],
     })
-)
+);
 
 workbox.routing.registerRoute(
-    new RegExp('.*\.css'),
-    workbox.strategies.staleWhileRevalidate({
+    ({request}) => request.destination === 'style',
+    new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'css-cache',
     })
-)
+);
 
 workbox.routing.registerRoute(
-    new RegExp('.*\.woff2'),
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'font-cache',
-    })
-)
-
-workbox.routing.registerRoute(
-    /\.(?:png|gif|jpg|jpeg|svg|ico)$/,
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'image-cache',
-    })
-)
-
-workbox.routing.registerRoute(
-    new RegExp('(?:https:\/\/my-domain)\.com((?!wp-admin|wp-login).)*$'),
-    workbox.strategies.staleWhileRevalidate({
-        cacheName: 'page-cache',
+    ({request}) => request.destination === 'script',
+    new workbox.strategies.StaleWhileRevalidate({
+        cacheName: 'js-cache',
         plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 10,
-                maxAgeSeconds: 7 * 24 * 60 * 60
+            new workbox.cacheableResponse.CacheableResponsePlugin({
+                statuses: [0, 200],
             })
         ]
     })
-)
+);
+
+workbox.routing.registerRoute(
+    ({request}) => request.destination === 'image',
+    new workbox.strategies.CacheFirst({
+        cacheName: 'images-cache',
+        plugins: [
+            new workbox.expiration.ExpirationPlugin({
+                maxEntries: 60,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 Days
+            }),
+        ],
+    })
+);
+
+workbox.routing.registerRoute(
+    ({url}) => url.origin === self.location.origin,
+    new workbox.strategies.StaleWhileRevalidate({
+        cacheName: 'page-cache',
+        plugins: [
+            new workbox.cacheableResponse.CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+            new workbox.expiration.ExpirationPlugin({
+                maxEntries: 20,
+                maxAgeSeconds: 7 * 24 * 60 * 60 // 7 Days
+            })
+        ]
+    })
+);
 
 workbox.routing.setCatchHandler(({ url, event, params }) => {
     return caches.match('/offline/')
-})
+});
