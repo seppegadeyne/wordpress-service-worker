@@ -1,8 +1,8 @@
 # Install a service worker
-## Optimized for a WordPress stack 
+## Optimized for WordPress
 Install a service worker to make your website work faster and also support offline viewing. You're website will be a qualified Progressive Web App (PWA). 
 
-By installing a service worker you will increase page loading times up to +50x times. 
+By installing a service worker you will increase page loading times up to +50x times. You can use this setup for any kind of website.
 
 ### Register the service worker
 #### Add to your functions.php
