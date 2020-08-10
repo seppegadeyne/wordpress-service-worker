@@ -5,7 +5,7 @@ Install a service worker to make your website work faster and also support offli
 ### Register the service worker
 You can use this setup for any kind of website. 
 
-#### For WordPress 
+#### WordPress 
 Add this to your functions.php
 ```php
 function serviceworker() {
@@ -44,7 +44,7 @@ function serviceworker() {
 add_action('wp_head', 'serviceworker');
 ```
 
-#### Other setups
+#### Other
 Add this to your html files.
 ```javascript
 <script>
