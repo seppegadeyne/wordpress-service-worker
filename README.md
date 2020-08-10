@@ -76,4 +76,4 @@ Add this to your html files.
 </script>
 ```
 ### Setup service worker
-Add service-worker.js to your root folder. It has to be placed under /service-worker.js. 
+Add ```service-worker.js``` to your root folder. It has to be placed under ```/service-worker.js```. 
