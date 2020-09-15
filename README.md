@@ -19,7 +19,7 @@ function serviceworker() {
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js?ver=0.0.15');
+                navigator.serviceWorker.register('/service-worker.js?ver=0.0.1');
 
                 let nodes = document.querySelectorAll('body a');
 
