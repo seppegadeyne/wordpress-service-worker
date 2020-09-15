@@ -7,7 +7,8 @@ workbox.setConfig({
 workbox.googleAnalytics.initialize();
 
 workbox.routing.registerRoute(
-    ({request}) => request.destination === 'font',
+    ({url, request}) => request.destination === 'font' &&
+                        !url.pathname.startsWith('/wp-admin/'),
     new workbox.strategies.CacheFirst({
         cacheName: 'font-cache',
         plugins: [
@@ -23,14 +24,16 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    ({request}) => request.destination === 'style',
+    ({url, request}) => request.destination === 'style' &&
+                        !url.pathname.startsWith('/wp-admin/'),
     new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'css-cache',
     })
 );
 
 workbox.routing.registerRoute(
-    ({request}) => request.destination === 'script',
+    ({url, request}) =>  request.destination === 'script' &&
+                    !url.pathname.startsWith('/wp-admin/'),
     new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'js-cache',
         plugins: [
@@ -42,7 +45,8 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    ({request}) => request.destination === 'image',
+    ({url, request}) =>  request.destination === 'image' &&
+                    !url.pathname.startsWith('/wp-admin/'),
     new workbox.strategies.CacheFirst({
         cacheName: 'images-cache',
         plugins: [
@@ -55,7 +59,8 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    ({url}) => url.origin === self.location.origin,
+    ({url}) =>  url.origin === self.location.origin &&
+                !url.pathname.startsWith('/wp-admin/'),
     new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'page-cache',
         plugins: [
